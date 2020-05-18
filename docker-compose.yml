@@ -1,0 +1,32 @@
+version: "3.3"
+
+services:
+
+  backend:
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    ports:
+      - 8000:8000
+    environment:
+      - SECRET_KEY=CHANGEME
+#      - DEBUG=True
+#      - ALLOWED_HOSTS=
+      - DATABASE_URL=postgres://postgres:postgres@db:5432/db
+    depends_on:
+      - db
+    volumes:
+    - static_data:/app/static/
+    - ./:/app/
+
+  db:
+    image: postgres:alpine
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/:cached
+
+volumes:
+  postgres_data:
+  static_data:
