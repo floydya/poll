@@ -15,6 +15,10 @@ http://localhost:8000/admin/
 
 Инлайн с опциями в вопросе будет показан после сохранения.
 
+## Docs
+
+http://localhost:8000/docs/
+
 
 ## Answer example
 ```json
