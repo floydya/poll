@@ -48,6 +48,12 @@ class QuestionAnswerSerializer(serializers.ModelSerializer):
                 if not attrs.get('choice_answer'):
                     raise serializers.ValidationError({"choice_answer": _("This field is required!")})
 
+            for answer in attrs.get('choice_answer'):
+                if answer.question != question:
+                    raise serializers.ValidationError(
+                        {"choice_answer": "Answer '{}' <{}> not valid for this question!".format(answer, answer.pk)}
+                    )
+
         return attrs
 
     class Meta:
@@ -70,7 +76,7 @@ class PollAnswerSerializer(serializers.ModelSerializer):
         question_keys = (q.get('question').pk for q in question_answers)
         if answers_remained := poll.questions.exclude(pk__in=question_keys):
             raise serializers.ValidationError(list(
-                { "question_answers": f"Answer on '{question}' <{question.id}> question is required! "}
+                { "question_answers": f"Answer on '{question}' <{question.id}> question is required!"}
                 for question in answers_remained
             ))
         return attrs
